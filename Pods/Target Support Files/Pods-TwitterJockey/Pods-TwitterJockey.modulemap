@@ -1,0 +1,6 @@
+framework module Pods_TwitterJockey {
+  umbrella header "Pods-TwitterJockey-umbrella.h"
+
+  export *
+  module * { export * }
+}
