@@ -53,8 +53,9 @@ class User: NSObject {
                 let userData = try!JSONSerialization.data(withJSONObject: user.dictionary, options: [])
                 defaults.set(userData, forKey: User.currentUserKey)
             }else{
-                
+                defaults.removeObject(forKey: User.currentUserKey)
             }
+            defaults.synchronize()
         }
 
     }

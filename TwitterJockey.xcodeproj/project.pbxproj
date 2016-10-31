@@ -13,6 +13,8 @@
 		2867A01F1DC3CA3200815496 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2867A01D1DC3CA3200815496 /* Main.storyboard */; };
 		2867A0211DC3CA3200815496 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2867A0201DC3CA3200815496 /* Assets.xcassets */; };
 		2867A0241DC3CA3200815496 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2867A0221DC3CA3200815496 /* LaunchScreen.storyboard */; };
+		28DA82A81DC6ADF600DCF8C4 /* HomeTimelineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DA82A71DC6ADF600DCF8C4 /* HomeTimelineTableViewCell.swift */; };
+		28DA82AC1DC6F97100DCF8C4 /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DA82AB1DC6F97100DCF8C4 /* TimeHelper.swift */; };
 		28F635F71DC3CBD8006569D0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F635F61DC3CBD8006569D0 /* LoginViewController.swift */; };
 		28F635F91DC3F31F006569D0 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F635F81DC3F31F006569D0 /* User.swift */; };
 		28F635FB1DC3F32C006569D0 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F635FA1DC3F32C006569D0 /* Tweet.swift */; };
@@ -28,6 +30,9 @@
 		2867A0201DC3CA3200815496 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2867A0231DC3CA3200815496 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2867A0251DC3CA3200815496 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		28DA82A41DC69D5900DCF8C4 /* TwitterJockey.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TwitterJockey.entitlements; sourceTree = "<group>"; };
+		28DA82A71DC6ADF600DCF8C4 /* HomeTimelineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTimelineTableViewCell.swift; sourceTree = "<group>"; };
+		28DA82AB1DC6F97100DCF8C4 /* TimeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeHelper.swift; sourceTree = "<group>"; };
 		28F635F61DC3CBD8006569D0 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		28F635F81DC3F31F006569D0 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		28F635FA1DC3F32C006569D0 /* Tweet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
@@ -71,6 +76,7 @@
 		2867A0181DC3CA3200815496 /* TwitterJockey */ = {
 			isa = PBXGroup;
 			children = (
+				28DA82A41DC69D5900DCF8C4 /* TwitterJockey.entitlements */,
 				28F635F51DC3CBB0006569D0 /* Clients */,
 				28F635F41DC3CBAA006569D0 /* Models */,
 				28F635F31DC3CB93006569D0 /* ViewControllers */,
@@ -88,6 +94,7 @@
 		28F635F21DC3CB8D006569D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				28DA82A71DC6ADF600DCF8C4 /* HomeTimelineTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -106,6 +113,7 @@
 			children = (
 				28F635F81DC3F31F006569D0 /* User.swift */,
 				28F635FA1DC3F32C006569D0 /* Tweet.swift */,
+				28DA82AB1DC6F97100DCF8C4 /* TimeHelper.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -172,6 +180,11 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = V4QF8FLG87;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -261,6 +274,8 @@
 			files = (
 				28F635F91DC3F31F006569D0 /* User.swift in Sources */,
 				28F635FB1DC3F32C006569D0 /* Tweet.swift in Sources */,
+				28DA82AC1DC6F97100DCF8C4 /* TimeHelper.swift in Sources */,
+				28DA82A81DC6ADF600DCF8C4 /* HomeTimelineTableViewCell.swift in Sources */,
 				28F635F71DC3CBD8006569D0 /* LoginViewController.swift in Sources */,
 				2867A01C1DC3CA3200815496 /* ViewController.swift in Sources */,
 				28F635FF1DC4232C006569D0 /* TweetsViewController.swift in Sources */,
@@ -309,6 +324,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -359,6 +375,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -389,6 +406,7 @@
 			baseConfigurationReference = 736490566E5630310EF7E97A /* Pods-TwitterJockey.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TwitterJockey/TwitterJockey.entitlements;
 				DEVELOPMENT_TEAM = V4QF8FLG87;
 				INFOPLIST_FILE = TwitterJockey/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -403,6 +421,7 @@
 			baseConfigurationReference = CEE541E40722E148CE075CF4 /* Pods-TwitterJockey.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TwitterJockey/TwitterJockey.entitlements;
 				DEVELOPMENT_TEAM = V4QF8FLG87;
 				INFOPLIST_FILE = TwitterJockey/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
