@@ -28,17 +28,17 @@ class HomeTimelineTableViewCell: UITableViewCell {
     }
     
     var tweet: Tweet! {
-        //        didSet{
-        //            self.businessNameLBL.text = business.name
-        //        }
+
         willSet{
             //Set profile pic
             if(newValue.userProfilePicUrl != nil){
                 self.userProfileImageView.setImageWith(newValue.userProfilePicUrl!, placeholderImage: #imageLiteral(resourceName: "iconmonstr-user-gray-20-72"))
-//                self.userProfileImageView.setImageWith(newValue.userProfilePicUrl!)
             }else{
                 self.userProfileImageView.image = #imageLiteral(resourceName: "iconmonstr-user-gray-20-72")
             }
+            
+            self.userProfileImageView.layer.cornerRadius = 5
+            self.userProfileImageView.clipsToBounds = true
             
             //Set label texts
             self.tweetTextLabel.text = newValue.text

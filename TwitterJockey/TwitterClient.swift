@@ -93,5 +93,74 @@ class TwitterClient: BDBOAuth1SessionManager {
             }
         )
     }
+    
+    func likeTweet(statusId: String, success: @escaping (Tweet)->Void, failure: @escaping (Error)->Void){
+        let parameters = ["id": statusId]
+        print("inside twitterClient likeTweet. parameters = \(parameters)")
+        _ = post("1.1/favorites/create.json", parameters: parameters, progress: nil,
+                 success: {(operation: URLSessionDataTask, response: Any?)->Void in
+                    print("Success liking post")
+                    if let responseDict = response as? Dictionary<String,Any>{
+                        print("successfully put response into dict")
+                        let tweet = Tweet(dict: responseDict)
+                        success(tweet)
+                        for (k,v) in responseDict{
+                            print("\(k)  :  \(v)")
+                        }
+                    }else{
+                        print("response dict after like post was nil")
+                    }},
+                 failure: {(operation: URLSessionDataTask?, error: Error)->Void in
+                    print("Error making post request (LIKE): \(error.localizedDescription)")
+                    failure(error)})
+    }
+    
+    func retweet(statusId: String, success: @escaping (Tweet)->Void, failure: @escaping (Error)->Void){
+        let urlString = "1.1/statuses/retweet/" //  1.1/statuses/retweet/243149503589400576.json
+        let retweetEndpointUrl = "\(urlString)\(statusId).json"
+        print("retweet end point: \(retweetEndpointUrl)")
+        _ = post(retweetEndpointUrl, parameters: nil, progress: nil,
+                 success: {(operation: URLSessionDataTask, response: Any?)->Void in
+                    print("Success retweeting post")
+                    if let responseDict = response as? Dictionary<String,Any>{
+                        if let retweetDict = responseDict["retweeted_status"] as? Dictionary<String,Any>{
+                            print("successfully putting retweet response into dict")
+                            let tweet = Tweet(dict: retweetDict)
+                            success(tweet)
+                            for (k,v) in responseDict{
+                                print("\(k)  :  \(v)")
+                            }
+                        }
+                    }else{
+                        print("response dict after like post was nil")
+                    }},
+                 failure: {(operation: URLSessionDataTask?, error: Error)->Void in
+                    print("Error making post request (RETWEET): \(error.localizedDescription)")
+                    failure(error)})
+    }
+    
+    func tweet(status: String, statusId: String?, success: @escaping (Tweet)->Void, failure: @escaping (Error)->Void){
+        var parameters: Dictionary<String,AnyObject> = ["status": status as AnyObject]
+        if(statusId != nil){
+            parameters["in_reply_to_status_id"] = statusId! as AnyObject
+        }
+        print("inside twitterClient Tweet. parameters = \(parameters)")
+        _ = post("1.1/statuses/update.json", parameters: parameters, progress: nil,
+                 success: {(operation: URLSessionDataTask, response: Any?)->Void in
+                    print("Success creating tweet post")
+                    if let responseDict = response as? Dictionary<String,Any>{
+                        print("successfully put response into dict")
+                        let tweet = Tweet(dict: responseDict)
+                        success(tweet)
+                        for (k,v) in responseDict{
+                            print("\(k)  :  \(v)")
+                        }
+                    }else{
+                        print("response dict after like post was nil")
+                    }},
+                 failure: {(operation: URLSessionDataTask?, error: Error)->Void in
+                    print("Error making post request (LIKE): \(error.localizedDescription)")
+                    failure(error)})
+    }
 
 }

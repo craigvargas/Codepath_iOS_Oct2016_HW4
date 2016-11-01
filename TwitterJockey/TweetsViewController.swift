@@ -15,6 +15,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet weak var homeTimelineTableView: UITableView!
     
+    @IBOutlet weak var newTweetBarButton: UIBarButtonItem!
+    
     var homeTimelineTweets = [Tweet]()
     
     let refreshControl = UIRefreshControl()
@@ -48,21 +50,49 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     
     @IBAction func onLogoutButtonTapped(_ sender: UIBarButtonItem) {
         TwitterClient.sharedInstance?.logout()
     }
     
 
-    /*
+    //(sender as! HomeTimelineTableViewCell)
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let segueSender = (sender as? HomeTimelineTableViewCell){
+            let selectedIndexPath = homeTimelineTableView.indexPath(for: segueSender)
+            if selectedIndexPath != nil{
+                let selectedTweet = homeTimelineTweets[selectedIndexPath!.row]
+                let nextNavCont = segue.destination as? UINavigationController ?? nil
+                let nextViewCont = nextNavCont?.topViewController as? TweetDetailViewController
+                if(nextViewCont != nil){
+                    nextViewCont!.acceptTweetToLoad(tweet: selectedTweet)
+                }else{
+                    print("Something went wrong in the segue")
+                }
+            }else{
+                print("indexPath was nil on segue")
+            }
+        }else if (sender as? UIBarButtonItem) == self.newTweetBarButton{
+            print("New Tweet Bar Button pressed")
+            let nextNavCont = segue.destination as? UINavigationController ?? nil
+            let nextViewCont = nextNavCont?.topViewController as? ComposeTweetViewController
+            if(nextViewCont != nil){
+                nextViewCont!.acceptTweetType(tweetType: Tweet.newTweetType)
+            }
+        }
+        
+
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
+ 
     
     
     
