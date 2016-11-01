@@ -28,8 +28,15 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         initializeTableView()
         initializeTableViewData()
         setupRefreshConrol()
-
-        // Do any additional setup after loading the view.
+        
+        NotificationCenter.default.addObserver(
+            forName: Tweet.tweetNotification,
+            object: nil,
+            queue: OperationQueue.main,
+            using: {(notification: Notification)->Void in
+                if let newTweet = notification.userInfo?[Tweet.tweetKey] as? Tweet{
+                    self.homeTimelineTweets.insert(newTweet, at: self.homeTimelineTweets.startIndex)
+                    self.homeTimelineTableView.reloadData()}})
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,7 +52,6 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         let cell = homeTimelineTableView.dequeueReusableCell(
             withIdentifier: TweetsViewController.homeTimelineCellKey,
             for: indexPath) as! HomeTimelineTableViewCell
-//        cell.parseTweet(tweet: homeTimelineTweets[indexPath.row])
         cell.tweet = homeTimelineTweets[indexPath.row]
         return cell
     }

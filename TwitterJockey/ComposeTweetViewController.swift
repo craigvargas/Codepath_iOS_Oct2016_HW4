@@ -8,6 +8,10 @@
 
 import UIKit
 
+@objc protocol ComposeTweetDelegate{
+    @objc optional func composeTweetViewController(composeTweetVc: ComposeTweetViewController, userDidPostNewTweet newTweet: Tweet)
+}
+
 class ComposeTweetViewController: UIViewController, UITextFieldDelegate {
     
     private let maxTweetLength = 140
@@ -19,7 +23,7 @@ class ComposeTweetViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var numCharsLeftInTweetLabel: UILabel!
     
     var tweet = Tweet(dict: [:])
-    
+    var delegate: ComposeTweetDelegate?
     var tweetType = ""
     
     override func viewDidLoad() {
@@ -69,14 +73,30 @@ class ComposeTweetViewController: UIViewController, UITextFieldDelegate {
                 self.tweet.reply(
                     status: tweetText,
                     success: {(tweet: Tweet)->Void in
-                        print("Reply successful")},
+                        print("Reply successful")
+                        NotificationCenter.default.post(
+                            name: Tweet.tweetNotification,
+                            object: nil,
+                            userInfo: [Tweet.tweetKey: tweet])
+//                        self.delegate?.composeTweetViewController?(
+//                            composeTweetVc: self,
+//                            userDidPostNewTweet: tweet)
+                    },
                     failure: {(error: Error)->Void in
                         print("error in reply: \(error.localizedDescription)")})
             }else if(self.tweetType == Tweet.newTweetType){
                 Tweet.tweet(
                     status: tweetText,
                     success: {(tweet: Tweet)->Void in
-                        print("Reply successful")},
+                        print("Reply successful")
+                        NotificationCenter.default.post(
+                            name: Tweet.tweetNotification,
+                            object: nil,
+                            userInfo: [Tweet.tweetKey: tweet])
+//                        self.delegate?.composeTweetViewController?(
+//                            composeTweetVc: self,
+//                            userDidPostNewTweet: tweet)
+                    },
                     failure: {(error: Error)->Void in
                         print("error in reply: \(error.localizedDescription)")})
             }

@@ -123,14 +123,14 @@ class TwitterClient: BDBOAuth1SessionManager {
                  success: {(operation: URLSessionDataTask, response: Any?)->Void in
                     print("Success retweeting post")
                     if let responseDict = response as? Dictionary<String,Any>{
-                        if let retweetDict = responseDict["retweeted_status"] as? Dictionary<String,Any>{
+                        
                             print("successfully putting retweet response into dict")
-                            let tweet = Tweet(dict: retweetDict)
+                            let tweet = Tweet(dict: responseDict)
                             success(tweet)
                             for (k,v) in responseDict{
                                 print("\(k)  :  \(v)")
                             }
-                        }
+                        
                     }else{
                         print("response dict after like post was nil")
                     }},

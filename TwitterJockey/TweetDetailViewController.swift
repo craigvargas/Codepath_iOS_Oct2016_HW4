@@ -50,8 +50,15 @@ class TweetDetailViewController: UIViewController {
         print("Retweet button Tapped")
         self.tweet.retweet(
             success: {(tweet: Tweet)->Void in
-                self.tweet = tweet
-                self.loadTweet()},
+                if let retweetDict = tweet.retweetTweet{
+                    let retweet = Tweet(dict: retweetDict)
+                    self.tweet = retweet
+                    self.loadTweet()
+//                    NotificationCenter.default.post(
+//                        name: Tweet.tweetNotification,
+//                        object: nil,
+//                        userInfo: [Tweet.tweetKey: tweet])
+                }},
             failure: {(error: Error)->Void in
                 print("Error liking tweet: \(error.localizedDescription)")})
     }
@@ -116,49 +123,49 @@ class TweetDetailViewController: UIViewController {
         
     }
     
-    func loadTweetAfterRetweet() {
-        //Response comes back with logged in user as the tweet author and we don't want to loose the info of the original tweeter
-//        if(self.tweet.userProfilePicUrl != nil){
-//            self.profilePicImageView.setImageWith(self.tweet.userProfilePicUrl!, placeholderImage: #imageLiteral(resourceName: "iconmonstr-user-gray-20-72"))
+//    func loadTweetAfterRetweet() {
+//        //Response comes back with logged in user as the tweet author and we don't want to loose the info of the original tweeter
+////        if(self.tweet.userProfilePicUrl != nil){
+////            self.profilePicImageView.setImageWith(self.tweet.userProfilePicUrl!, placeholderImage: #imageLiteral(resourceName: "iconmonstr-user-gray-20-72"))
+////        }
+//        
+////        self.nameLabel.text = self.tweet.userName
+////        if(self.tweet.userScreenName != nil){
+////            self.screenNameLabel.text = "@\(self.tweet.userScreenName!)"
+////        }
+//        
+//        self.tweetTextLabel.text = self.tweet.text
+//        self.timestampLabel.text = self.tweet.timeStamp?.description
+//        self.numberOfRetweetsLabel.text = "\(tweet.retweetCount)"
+//        self.numberOfFavoritesLabel.text = "\(tweet.favoritesCount)"
+//        
+//        if let favorited = tweet.favorited{
+//            if favorited{
+//                print("Favorited check: true")
+//                self.likeButton.tintColor = UIColor.red
+//            }else{
+//                print("Favorited check: false")
+//                self.likeButton.tintColor = UIColor.gray
+//            }
+//        }else{
+//            print("favorited was nil")
+//            self.likeButton.tintColor = UIColor.gray
 //        }
-        
-//        self.nameLabel.text = self.tweet.userName
-//        if(self.tweet.userScreenName != nil){
-//            self.screenNameLabel.text = "@\(self.tweet.userScreenName!)"
+//        
+//        if let retweeted = tweet.retweeted{
+//            if retweeted{
+//                print("Retweeted check: true")
+//                self.retweetButton.tintColor = UIColor.green
+//            }else{
+//                print("Retweeted check: false")
+//                self.retweetButton.tintColor = UIColor.gray
+//            }
+//        }else{
+//            print("retweeted was nil")
+//            self.retweetButton.tintColor = UIColor.gray
 //        }
-        
-        self.tweetTextLabel.text = self.tweet.text
-        self.timestampLabel.text = self.tweet.timeStamp?.description
-        self.numberOfRetweetsLabel.text = "\(tweet.retweetCount)"
-        self.numberOfFavoritesLabel.text = "\(tweet.favoritesCount)"
-        
-        if let favorited = tweet.favorited{
-            if favorited{
-                print("Favorited check: true")
-                self.likeButton.tintColor = UIColor.red
-            }else{
-                print("Favorited check: false")
-                self.likeButton.tintColor = UIColor.gray
-            }
-        }else{
-            print("favorited was nil")
-            self.likeButton.tintColor = UIColor.gray
-        }
-        
-        if let retweeted = tweet.retweeted{
-            if retweeted{
-                print("Retweeted check: true")
-                self.retweetButton.tintColor = UIColor.green
-            }else{
-                print("Retweeted check: false")
-                self.retweetButton.tintColor = UIColor.gray
-            }
-        }else{
-            print("retweeted was nil")
-            self.retweetButton.tintColor = UIColor.gray
-        }
-        
-    }
+//        
+//    }
 
 
 

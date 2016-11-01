@@ -50,22 +50,22 @@ class HomeTimelineTableViewCell: UITableViewCell {
         }
     }
     
-    func parseTweet(tweet: Tweet){
-        self.tweetTextLabel.text = tweet.text
-        self.userNameLabel.text = tweet.userName
-        self.userScreenNameLabel.text = tweet.userScreenName
-        self.timeSinceTweetLabel.text = getTimeSinceTweet(timeStamp: tweet.timeStamp)
-        
-//        if(tweet.userProfilePicUrl != nil){
-//            print("unwrapped Url: \(tweet.userProfilePicUrl!)")
-//            self.userProfileImageView.setImageWith(tweet.userProfilePicUrl!)
-////            self.userProfileImageView.setImageWith(tweet.userProfilePicUrl!, placeholderImage: #imageLiteral(resourceName: "iconmonstr-user-gray-20-72"))
+//    func parseTweet(tweet: Tweet){
+//        self.tweetTextLabel.text = tweet.text
+//        self.userNameLabel.text = tweet.userName
+//        self.userScreenNameLabel.text = tweet.userScreenName
+//        self.timeSinceTweetLabel.text = getTimeSinceTweet(timeStamp: tweet.timeStamp)
+//        
+////        if(tweet.userProfilePicUrl != nil){
+////            print("unwrapped Url: \(tweet.userProfilePicUrl!)")
+////            self.userProfileImageView.setImageWith(tweet.userProfilePicUrl!)
+//////            self.userProfileImageView.setImageWith(tweet.userProfilePicUrl!, placeholderImage: #imageLiteral(resourceName: "iconmonstr-user-gray-20-72"))
+////        }
+//        
+//        if let unwrappedUrl = tweet.userProfilePicUrl{
+//            self.userProfileImageView.setImageWith(unwrappedUrl, placeholderImage: #imageLiteral(resourceName: "iconmonstr-user-gray-20-72"))
 //        }
-        
-        if let unwrappedUrl = tweet.userProfilePicUrl{
-            self.userProfileImageView.setImageWith(unwrappedUrl, placeholderImage: #imageLiteral(resourceName: "iconmonstr-user-gray-20-72"))
-        }
-    }
+//    }
     
     func getTimeSinceTweet(timeStamp: Date?) -> String {
         if let unwrappedTimeStamp = timeStamp{

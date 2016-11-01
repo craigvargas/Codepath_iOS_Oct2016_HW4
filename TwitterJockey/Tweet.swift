@@ -12,6 +12,8 @@ class Tweet: NSObject {
     
     public static let newTweetType = "newTweet"
     public static let replyTweetType = "replyTweet"
+    public static let tweetKey = "tweet"
+    public static let tweetNotification = NSNotification.Name("tweetNotification")
     
     var text: String?
     var timeStamp: Date?
@@ -25,19 +27,21 @@ class Tweet: NSObject {
     var favorited: Bool?
     var retweeted: Bool?
     var tweetId: String?
+    var retweetTweet: Dictionary<String, Any>?
     
     init(dict: Dictionary<String,Any>) {
         self.user = dict["user"] as? Dictionary<String,Any>
         self.text = dict["text"] as? String
         self.retweetCount = dict["retweet_count"] as? Int ?? 0
-//        self.favoritesCount = dict["favourites_count"] as? Int ?? 0
-        self.favoritesCount = self.user?["favourites_count"] as? Int ?? 0
+        self.favoritesCount = dict["favorite_count"] as? Int ?? 0
+//        self.favoritesCount = self.user?["favourites_count"] as? Int ?? 0
         self.userProfilePicUrlString = self.user?["profile_image_url_https"] as? String
         self.userName = self.user?["name"] as? String
         self.userScreenName = self.user?["screen_name"] as? String
         self.favorited = dict["favorited"] as? Bool
         self.retweeted = dict["retweeted"] as? Bool
         self.tweetId = dict["id_str"] as? String
+        self.retweetTweet = dict["retweeted_status"] as? Dictionary<String,Any>
         
         if let unwrappedUrlString = self.userProfilePicUrlString{
             self.userProfilePicUrl = URL(string: unwrappedUrlString)
