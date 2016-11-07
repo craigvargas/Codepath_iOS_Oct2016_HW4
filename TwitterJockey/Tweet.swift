@@ -69,6 +69,11 @@ class Tweet: NSObject {
         print("********************")
     }
     
+    enum TweetType: String {
+        case homeTimeline = "homeTimeline"
+        case mentions = "mentions"
+    }
+    
     class func tweets(withArray dicts: [Dictionary<String,Any>])->[Tweet]{
         var tweets = [Tweet]()
         var tweet = Tweet(dict: [:])

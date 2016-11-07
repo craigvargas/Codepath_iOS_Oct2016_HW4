@@ -162,5 +162,49 @@ class TwitterClient: BDBOAuth1SessionManager {
                     print("Error making post request (LIKE): \(error.localizedDescription)")
                     failure(error)})
     }
+    
+    func user(userId: String, success: @escaping (User)->Void, failure: @escaping (Error)->Void){
+        let endPoint = "1.1/users/show.json"
+        let parameters: Dictionary<String, AnyObject> = ["user_id": userId as AnyObject]
+        
+        _ = get(endPoint, parameters: parameters, progress: nil,
+                 success: {(operation: URLSessionDataTask, response: Any?)->Void in
+                    print("Success getting full user data")
+                    if let responseDict = response as? Dictionary<String,Any>{
+                        print("successfully put user data response into dict")
+                        let userObject = User(dict: responseDict)
+                        success(userObject)
+                        for (k,v) in responseDict{
+                            print("\(k)  :  \(v)")
+                        }
+                    }else{
+                        print("response dict after like post was nil")
+                    }},
+                 failure: {(operation: URLSessionDataTask?, error: Error)->Void in
+                    print("Error making get request (USER SHOW): \(error.localizedDescription)")
+                    failure(error)})
+    }
+    
+    //1.1/statuses/mentions_timeline.json
+    
+    func mentions(success: @escaping ([Tweet])->Void, failure: @escaping (Error)->Void){
+        let endPoint = "1.1/statuses/mentions_timeline.json"
+        let parameters: Dictionary<String, AnyObject> = ["count": 20.0 as AnyObject]
+        
+        _ = get(endPoint, parameters: parameters, progress: nil,
+                success: {(operation: URLSessionDataTask, response: Any?)->Void in
+                    print("Success getting full user data")
+                    if let responseArray = response as? [Dictionary<String,Any>]{
+                        print("successfully put mentions data response into dict")
+                        let mentions = Tweet.tweets(withArray: responseArray)
+                        success(mentions)
+                        print("Number of mentions: ")
+                    }else{
+                        print("response dict after like post was nil")
+                    }},
+                failure: {(operation: URLSessionDataTask?, error: Error)->Void in
+                    print("Error making get request (USER SHOW): \(error.localizedDescription)")
+                    failure(error)})
+    }
 
 }

@@ -29,29 +29,14 @@ class LoginViewController: UIViewController {
         twitterClient?.login(
             success: {()->Void in
                 print("Logged in!")
-                self.performSegue(withIdentifier: "loginSegue", sender: nil)},
+//                self.performSegue(withIdentifier: "loginSegue", sender: nil)},
+                self.performSegue(withIdentifier: "loginToMasterSegue", sender: nil)},
             failure: {(error: Error?)->Void in
                 if let error = error{
                     print("\(error.localizedDescription)")
                 }else{
                     print("Login returned a nil erorr inside the failure block, WTF???")
                 }})
-        
-//        twitterClient?.deauthorize()
-//        
-//        twitterClient?
-//            .fetchRequestToken(withPath: "oauth/request_token", method: "GET", callbackURL: URL(string:"twitterjockey://oauth"), scope: nil,
-//                               success: {(requestToken: BDBOAuth1Credential?)->Void in
-//                                
-//                                print("Got Request Token: \(requestToken!.token!)")
-//                                if let authorizeUrl = URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken!.token!)") {
-//                                    print("inside if statement")
-//                                UIApplication.shared.open(authorizeUrl, options: [:], completionHandler: {(wasSuccessful:Bool)->Void in
-//                                    print("wasSuccessful \(wasSuccessful)")})
-//                                }},
-//                               failure: {(error: Error?)->Void in
-//                                
-//                                print("\(error)")})
     }
     
 

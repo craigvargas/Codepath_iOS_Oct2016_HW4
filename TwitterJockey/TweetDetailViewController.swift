@@ -24,7 +24,6 @@ class TweetDetailViewController: UIViewController {
     
     
     var tweet: Tweet = Tweet(dict: [:])
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()

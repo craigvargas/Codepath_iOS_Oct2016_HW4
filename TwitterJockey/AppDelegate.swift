@@ -20,9 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if User.currentUser != nil{
             print("App has started with a current User")
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyBoard.instantiateViewController(withIdentifier: "TweetsNavController")
+//            let vc = storyBoard.instantiateViewController(withIdentifier: "TweetsNavController")
+            let masterVC = storyBoard.instantiateViewController(withIdentifier: "MasterViewController") as! MasterViewController
+            let menuVC = storyBoard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
             
-            window?.rootViewController = vc
+            //Wire master and menu vc's so then can speak to each other
+            menuVC.masterViewConroller = masterVC
+            masterVC.menuViewController = menuVC
+            
+            window?.rootViewController = masterVC
         }else{
             print("App has started with no current User")
         }
@@ -69,27 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             url: url,
             failure: {(errorMessage: String)->Void in
                 print(errorMessage)})
-            
-
-//            twitterClient?.fetchAccessToken(
-//                withPath: "oauth/access_token", method: "POST", requestToken: requestToken,
-//                success: {(accessToken: BDBOAuth1Credential?)->Void in
-//                    print("got the access token")
-//                    
-//                    twitterClient?.currentAccount(
-//                        success: {(currentUser: User)->Void in
-//                            print("\(currentUser.name)")
-//                            print("\(currentUser.screenName)")},
-//                        failure: {(error: Error)->Void in
-//                            print("\(error.localizedDescription)")})
-//                    
-//                    twitterClient?.homeTimeline(
-//                        success: {(tweets: [Tweet])->Void in
-//                            print("Number of Tweets: \(tweets.count)")},
-//                        failure: {(error: Error)->Void in
-//                            print("\(error.localizedDescription)")})},
-//                failure: {(error: Error?)->Void in
-//                    print("\(error?.localizedDescription)")})}
         
         return true
         

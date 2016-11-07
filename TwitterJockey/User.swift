@@ -17,8 +17,19 @@ class User: NSObject {
     var profileUrl: URL?
     var tagline: String?
     var dictionary: Dictionary<String,Any>
+    var id: String?
+    
+    var backgroundUrl: URL?
+    var statusDict: Dictionary<String,Any>?
+    var status: String?
+    var userDescription: String?
+    var followersCount: Int?
+    var friendsCount: Int?
+    var statusesCount: Int?
+    
     
     init(dict: Dictionary<String,Any>) {
+        self.id = dict["id_str"] as? String
         self.name = dict["name"] as? String
         self.screenName = dict["screen_name"] as? String
         
@@ -28,6 +39,25 @@ class User: NSObject {
         
         self.tagline = dict["tagline"] as? String
         self.dictionary = dict
+        
+        //Divider
+        if let backgroundUrlString = dict["profile_background_image_url_https"] as? String {
+            self.backgroundUrl = URL(string: backgroundUrlString)
+        }
+//        self.statusDict = dict["status"] as? Dictionary<String, Any>
+        self.status = (dict["status"] as? Dictionary<String, Any>)?["text"] as? String
+        self.userDescription = dict["description"] as? String
+        self.followersCount = dict["followers_count"] as? Int
+        self.friendsCount = dict["friends_count"] as? Int
+        self.statusesCount = dict["statuses_count"] as? Int
+    }
+    
+    func getFormattedScreenName() -> String?{
+        if(self.screenName != nil){
+            return "@\(self.screenName!)"
+        }else{
+            return nil
+        }
     }
     
     static var _currentUser: User?
@@ -57,7 +87,33 @@ class User: NSObject {
             }
             defaults.synchronize()
         }
-
+    }
+    
+    class func refreshCurrentUser(success: @escaping (User)->Void, failure: @escaping (Error)->Void) -> Void{
+        if let oldUserObject = currentUser{
+            if let userId = oldUserObject.id{
+                TwitterClient.sharedInstance?.user(
+                    userId: userId,
+                    success: {(user: User) -> Void in
+                        self.currentUser = user
+                        success(user)},
+                    failure: {(error: Error) -> Void in
+                        print(error.localizedDescription)
+                        failure(error)})
+            }else{
+                //No userId
+            }
+        }else{
+            //User is not logged in
+        }
+    }
+    
+    class func getUserMentions(success: @escaping ([Tweet])->Void, failure: @escaping (Error)->Void) -> Void{
+        TwitterClient.sharedInstance?.mentions(
+            success: {(tweets: [Tweet])->Void in
+                success(tweets)},
+            failure: {(error: Error)->Void in
+                failure(error)})
     }
 
 }

@@ -21,7 +21,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     let refreshControl = UIRefreshControl()
     
-
+    var tweetType: Tweet.TweetType = .homeTimeline
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -118,16 +119,30 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func initializeTableViewData(){
-        TwitterClient.sharedInstance?.homeTimeline(
-            success: {(tweets: [Tweet])->Void in
-                self.homeTimelineTweets = tweets
-                self.homeTimelineTableView.reloadData()
-                self.refreshControl.endRefreshing()},
-            failure: {(error: Error)->Void in
-                print(error.localizedDescription)
-                self.homeTimelineTweets = [Tweet]()
-                self.homeTimelineTableView.reloadData()
-                self.refreshControl.endRefreshing()})
+        print("Tweet data is of type: \(self.tweetType.rawValue)")
+        if self.tweetType == .homeTimeline{
+            TwitterClient.sharedInstance?.homeTimeline(
+                success: {(tweets: [Tweet])->Void in
+                    self.homeTimelineTweets = tweets
+                    self.homeTimelineTableView.reloadData()
+                    self.refreshControl.endRefreshing()},
+                failure: {(error: Error)->Void in
+                    print(error.localizedDescription)
+                    self.homeTimelineTweets = [Tweet]()
+                    self.homeTimelineTableView.reloadData()
+                    self.refreshControl.endRefreshing()})
+        }else if self.tweetType == .mentions{
+            User.getUserMentions(
+                success: {(tweets: [Tweet])->Void in
+                    self.homeTimelineTweets = tweets
+                    self.homeTimelineTableView.reloadData()
+                    self.refreshControl.endRefreshing()},
+                failure: {(error: Error)->Void in
+                    print(error.localizedDescription)
+                    self.homeTimelineTweets = [Tweet]()
+                    self.homeTimelineTableView.reloadData()
+                    self.refreshControl.endRefreshing()})
+        }
     }
     
     func setupRefreshConrol(){
