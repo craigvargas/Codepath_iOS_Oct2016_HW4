@@ -13,4 +13,5 @@ class TwitterJockey: NSObject {
     static let TweetsViewCtrlId = "TweetsViewController"
     static let ProfileNavCtrlId = "ProfileNavController"
     static let ProfileViewCtrlId = "ProfileViewController"
+    static let TweetsTwoViewCtrlId = "TweetsTwoViewController"
 }

@@ -20,6 +20,7 @@ class User: NSObject {
     var id: String?
     
     var backgroundUrl: URL?
+    var bannerUrl: URL?
     var statusDict: Dictionary<String,Any>?
     var status: String?
     var userDescription: String?
@@ -44,6 +45,11 @@ class User: NSObject {
         if let backgroundUrlString = dict["profile_background_image_url_https"] as? String {
             self.backgroundUrl = URL(string: backgroundUrlString)
         }
+        
+        if let bannerUrlString = dict["profile_banner_url"] as? String {
+            self.bannerUrl = URL(string: bannerUrlString)
+        }
+        
 //        self.statusDict = dict["status"] as? Dictionary<String, Any>
         self.status = (dict["status"] as? Dictionary<String, Any>)?["text"] as? String
         self.userDescription = dict["description"] as? String
@@ -106,6 +112,15 @@ class User: NSObject {
         }else{
             //User is not logged in
         }
+    }
+    
+    class func getUser(withUserId userId: String, success: @escaping (User)->Void, failure: @escaping (Error)->Void) -> Void{
+        TwitterClient.sharedInstance?.user(
+            userId: userId,
+            success: {(requestedUser: User) -> Void in
+                success(requestedUser)},
+            failure: {(error: Error)->Void in
+                failure(error)})
     }
     
     class func getUserMentions(success: @escaping ([Tweet])->Void, failure: @escaping (Error)->Void) -> Void{

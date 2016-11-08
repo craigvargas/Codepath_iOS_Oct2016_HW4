@@ -1,14 +1,15 @@
 //
-//  HomeTimelineTableViewCell.swift
+//  TweetsTableViewCell.swift
 //  TwitterJockey
 //
-//  Created by Craig Vargas on 10/30/16.
+//  Created by Craig Vargas on 11/7/16.
 //  Copyright © 2016 Cvar. All rights reserved.
 //
 
+
 import UIKit
 
-class HomeTimelineTableViewCell: UITableViewCell {
+class TweetsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var tweetTextLabel: UILabel!
     @IBOutlet weak var userNameLabel: UILabel!
@@ -17,24 +18,25 @@ class HomeTimelineTableViewCell: UITableViewCell {
     @IBOutlet weak var userProfileImageView: UIImageView!
     
     
-    static let profilePicTappedNotification = NSNotification.Name("homeTimelineTableViewCell.profilePicTapped")
+    static let profilePicTappedNotification = NSNotification.Name("tweetsTableViewCell.profilePicTapped")
     static let userIdKey = "userId"
-
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
         setupImageTapGesture()
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
     var tweet: Tweet! {
-
+        
         willSet{
             //Set profile pic
             if(newValue.userProfilePicUrl != nil){
@@ -55,6 +57,7 @@ class HomeTimelineTableViewCell: UITableViewCell {
             self.timeSinceTweetLabel.text = getTimeSinceTweet(timeStamp: newValue.timeStamp)
         }
     }
+
     
     func getTimeSinceTweet(timeStamp: Date?) -> String {
         if let unwrappedTimeStamp = timeStamp{
@@ -85,19 +88,16 @@ class HomeTimelineTableViewCell: UITableViewCell {
     }
     
     func didTapProfileImageView(){
-        print("******")
         print("user did tap image")
-        print("******")
         if let selectedUserId = self.tweet.userId{
-            print("userId inside HomeTimeline: \(self.tweet.userId)")
-            let userInfo = [HomeTimelineTableViewCell.userIdKey: selectedUserId]
-            NotificationCenter.default.post(name: HomeTimelineTableViewCell.profilePicTappedNotification, object: nil, userInfo: userInfo)
-            //        NotificationCenter.default.post(name: TweetsTableViewCell.profilePicTappedNotification, object: nil)
+            let userInfo = [TweetsTableViewCell.userIdKey: selectedUserId]
+            NotificationCenter.default.post(name: TweetsTableViewCell.profilePicTappedNotification, object: nil, userInfo: userInfo)
+//        NotificationCenter.default.post(name: TweetsTableViewCell.profilePicTappedNotification, object: nil)
         }else{
             print("******")
             print("UserId nil, can't load profile page from table view cell")
             print("******")
         }
     }
-
+    
 }

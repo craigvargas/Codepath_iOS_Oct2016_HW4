@@ -1,28 +1,30 @@
 //
-//  TweetsViewController.swift
+//  TweetsTwoViewController.swift
 //  TwitterJockey
 //
-//  Created by Craig Vargas on 10/28/16.
+//  Created by Craig Vargas on 11/7/16.
 //  Copyright © 2016 Cvar. All rights reserved.
 //
 
 import UIKit
 
-class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+
+
+class TweetsTwoViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     private static let homeTimelineCellKey = "HomeTimelineTableViewCell"
     private let firstRowIndex = 0
     
     @IBOutlet weak var homeTimelineTableView: UITableView!
-    
-    @IBOutlet weak var newTweetBarButton: UIBarButtonItem!
-    
+        
     var homeTimelineTweets = [Tweet]()
     
     let refreshControl = UIRefreshControl()
     
     var tweetType: Tweet.TweetType = .homeTimeline
     
+    var userId: String?
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,7 +41,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
                     self.homeTimelineTweets.insert(newTweet, at: self.homeTimelineTweets.startIndex)
                     self.homeTimelineTableView.reloadData()}})
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -51,8 +53,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = homeTimelineTableView.dequeueReusableCell(
-            withIdentifier: TweetsViewController.homeTimelineCellKey,
-            for: indexPath) as! HomeTimelineTableViewCell
+            withIdentifier: TweetsTwoViewController.homeTimelineCellKey,
+            for: indexPath) as! TweetsTableViewCell
         cell.tweet = homeTimelineTweets[indexPath.row]
         return cell
     }
@@ -60,10 +62,12 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
+    
+    
+    /*
     //(sender as! HomeTimelineTableViewCell)
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let segueSender = (sender as? HomeTimelineTableViewCell){
@@ -89,11 +93,12 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             }
         }
         
-
+        
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
- 
+    */
+    
     
     
     
@@ -114,7 +119,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     func initializeTableViewData(){
         print("Tweet data is of type: \(self.tweetType.rawValue)")
-        if self.tweetType == .homeTimeline{
+        switch self.tweetType {
+        case .homeTimeline:
             TwitterClient.sharedInstance?.homeTimeline(
                 success: {(tweets: [Tweet])->Void in
                     self.homeTimelineTweets = tweets
@@ -125,7 +131,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
                     self.homeTimelineTweets = [Tweet]()
                     self.homeTimelineTableView.reloadData()
                     self.refreshControl.endRefreshing()})
-        }else if self.tweetType == .mentions{
+            break
+        case .mentions:
             User.getUserMentions(
                 success: {(tweets: [Tweet])->Void in
                     self.homeTimelineTweets = tweets
@@ -136,7 +143,49 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
                     self.homeTimelineTweets = [Tweet]()
                     self.homeTimelineTableView.reloadData()
                     self.refreshControl.endRefreshing()})
+            break
+        case .userTimeline:
+            if let unwrappedUserId = self.userId{
+                TwitterClient.sharedInstance?.userTimeline(
+                    userId: unwrappedUserId,
+                    success: {(tweets: [Tweet])->Void in
+                        self.homeTimelineTweets = tweets
+                        self.homeTimelineTableView.reloadData()
+                        self.refreshControl.endRefreshing()},
+                    failure: {(error: Error)->Void in
+                        print(error.localizedDescription)
+                        self.homeTimelineTweets = [Tweet]()
+                        self.homeTimelineTableView.reloadData()
+                        self.refreshControl.endRefreshing()})
+            }else{
+                print("TweetsTwoViewController: need to set userId")
+            }
+            break
         }
+        
+//        if self.tweetType == .homeTimeline{
+//            TwitterClient.sharedInstance?.homeTimeline(
+//                success: {(tweets: [Tweet])->Void in
+//                    self.homeTimelineTweets = tweets
+//                    self.homeTimelineTableView.reloadData()
+//                    self.refreshControl.endRefreshing()},
+//                failure: {(error: Error)->Void in
+//                    print(error.localizedDescription)
+//                    self.homeTimelineTweets = [Tweet]()
+//                    self.homeTimelineTableView.reloadData()
+//                    self.refreshControl.endRefreshing()})
+//        }else if self.tweetType == .mentions{
+//            User.getUserMentions(
+//                success: {(tweets: [Tweet])->Void in
+//                    self.homeTimelineTweets = tweets
+//                    self.homeTimelineTableView.reloadData()
+//                    self.refreshControl.endRefreshing()},
+//                failure: {(error: Error)->Void in
+//                    print(error.localizedDescription)
+//                    self.homeTimelineTweets = [Tweet]()
+//                    self.homeTimelineTableView.reloadData()
+//                    self.refreshControl.endRefreshing()})
+//        }
     }
     
     func setupRefreshConrol(){
@@ -144,5 +193,5 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         refreshControl.addTarget(self, action: #selector(initializeTableViewData), for: UIControlEvents.valueChanged)
         self.homeTimelineTableView.insertSubview(refreshControl, at: firstRowIndex)
     }
-
+    
 }

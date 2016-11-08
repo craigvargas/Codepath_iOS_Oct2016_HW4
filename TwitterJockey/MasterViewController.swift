@@ -8,8 +8,11 @@
 
 import UIKit
 
+//@objc protocol MasterViewCtrlControlCenter {
+//    @objc optional func tweetsTableViewCell(_ tweetsTableViewCell: TweetsTableViewCell, didRequestProfileViewFor userId: String)
+//}
+
 class MasterViewController: UIViewController {
-    
     
     @IBOutlet weak var menuViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var menuViewBottomConstraint: NSLayoutConstraint!
@@ -19,6 +22,10 @@ class MasterViewController: UIViewController {
     @IBOutlet var menuViewPanGestureRecognizer: UIPanGestureRecognizer!
     @IBOutlet weak var menuContentView: UIView!
     @IBOutlet weak var menuView: UIView!
+    
+    
+    @IBOutlet weak var expandContractLeftImageView: UIImageView!
+    @IBOutlet weak var expandContractRightImageView: UIImageView!
 
     
     let originalMenuViewConstraintConst: CGFloat = 0.0
@@ -26,6 +33,9 @@ class MasterViewController: UIViewController {
     var menuViewOpenConst: CGFloat!
     var menuViewClosedConst: CGFloat!
     var menuState: MenuState = .closed
+    
+    var profileNavCtrl: UINavigationController!
+    var profileViewCtrl: ProfileViewController!
     
     var menuViewController: UIViewController!{
         didSet{
@@ -66,6 +76,7 @@ class MasterViewController: UIViewController {
         self.menuView.clipsToBounds = true
         calcMenuConstraints()
         closeMenu();
+        addObservers()
         // Do any additional setup after loading the view.
     }
 
@@ -73,6 +84,7 @@ class MasterViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     //*
     //**
@@ -158,6 +170,12 @@ class MasterViewController: UIViewController {
                 if(wasSuccessful){
                     self.menuState = .open
                 }})
+        
+        UIView.animate(withDuration: 1.0, animations: {
+            self.expandContractLeftImageView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+            self.expandContractRightImageView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+
+        })
     }
     
     func closeMenu(){
@@ -171,6 +189,11 @@ class MasterViewController: UIViewController {
                 if(wasSuccessful){
                     self.menuState = .closed
                 }})
+        
+        UIView.animate(withDuration: 1.0, animations: {
+            self.expandContractLeftImageView.transform = CGAffineTransform(rotationAngle: 2.0*CGFloat(M_PI))
+            self.expandContractRightImageView.transform = CGAffineTransform(rotationAngle: 2.0*CGFloat(M_PI))
+        })
     }
     
     func moveMenu(_ sender: UIPanGestureRecognizer){
@@ -192,6 +215,44 @@ class MasterViewController: UIViewController {
         default:
             break
         }
+    }
+    
+    func addObservers(){
+        //From TweetsTableViewCell
+        NotificationCenter.default.addObserver(
+            forName: TweetsTableViewCell.profilePicTappedNotification, object: nil, queue: OperationQueue.main,
+            using: {(notification: Notification)->Void in
+                let userId = notification.userInfo?[TweetsTableViewCell.userIdKey] as? String
+                self.showProfileViewCtrl(userId: userId)
+        })
+        
+        //From HomeTimelineTableViewCell
+        NotificationCenter.default.addObserver(
+            forName: HomeTimelineTableViewCell.profilePicTappedNotification, object: nil, queue: OperationQueue.main,
+            using: {(notification: Notification)->Void in
+                let userId = notification.userInfo?[TweetsTableViewCell.userIdKey] as? String
+                print("userId inside MasterViewController add observer: \(userId)")
+                self.showProfileViewCtrl(userId: userId)
+        })
+    }
+    
+    func showProfileViewCtrl(userId: String?){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        self.profileNavCtrl = storyboard.instantiateViewController(withIdentifier: TwitterJockey.ProfileNavCtrlId) as! UINavigationController
+        self.profileViewCtrl = self.profileNavCtrl.topViewController as! ProfileViewController
+        print("userId inside MasterViewController showProfileViewCtrl: \(userId)")
+        self.profileViewCtrl.userId = userId
+        self.profileViewCtrl.didRequestAuthenticatedUserProfile = false
+        self.contentViewController = self.profileNavCtrl
+    }
+    
+    func setupMenuViewCtrl(){
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let menuVC = storyBoard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
+        
+        //Wire master and menu vc's so then can speak to each other
+        menuVC.masterViewConroller = self
+        self.menuViewController = menuVC
     }
 
 }

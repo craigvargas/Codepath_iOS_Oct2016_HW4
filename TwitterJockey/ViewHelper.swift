@@ -10,6 +10,9 @@ import UIKit
 
 class ViewHelper: NSObject {
     
+    static let decimalNumberFormatter = NumberFormatter()
+    
+    
     class func setImageIfPossibleFor(imageView: UIImageView, withUrl url: URL?){
         if(url != nil){
             imageView.setImageWith(url!)
@@ -18,7 +21,9 @@ class ViewHelper: NSObject {
     
     class func setTextIfPossibleFor(label: UILabel, withInteger integer: Int?){
         if(integer != nil){
-            label.text = "\(integer!)"
+            ViewHelper.decimalNumberFormatter.numberStyle = NumberFormatter.Style.decimal
+            label.text = ViewHelper.decimalNumberFormatter.string(from: NSNumber(integerLiteral: integer!))
+//            label.text = "\(integer!)"
         }
     }
     

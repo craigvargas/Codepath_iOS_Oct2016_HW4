@@ -15,6 +15,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let profileScreenKey = "Profile"
     let timelineScreenKey = "Timeline"
     let mentionsScreenKey = "Mentions"
+    let logoutScreenKey = "Logout"
     
     let tweetsNavCtrlIdentifier = "TweetsNavController"
     let profileNavCtrlIdentifier = "ProfileNavController"
@@ -27,7 +28,8 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var timelineNavCtrl: UINavigationController!
     var timelineViewController: TweetsViewController!
-    var profileViewController: UIViewController!
+    var profileNavCtrl: UINavigationController!
+    var profileViewController: ProfileViewController!
     var mentionsNavCtrl: UINavigationController!
     var mentionsViewController: TweetsViewController!
 
@@ -59,8 +61,16 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        masterViewConroller.contentViewController = menuDict[menuItems[indexPath.row]]
+        tableView.deselectRow(at: indexPath, animated: false)
+        if menuItems[indexPath.row] == self.logoutScreenKey{
+            TwitterClient.sharedInstance?.logout()
+        }else{
+            let cell = tableView.cellForRow(at: indexPath) as! MainMenuTableViewCell
+            cell.animateMenuItem(doneAnimating: {
+                self.masterViewConroller.contentViewController = self.menuDict[self.menuItems[indexPath.row]]
+            })
+//            masterViewConroller.contentViewController = menuDict[menuItems[indexPath.row]]
+        }
     }
     
 
@@ -88,6 +98,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.menuItems.append(self.profileScreenKey)
         self.menuItems.append(self.timelineScreenKey)
         self.menuItems.append(self.mentionsScreenKey)
+        self.menuItems.append(self.logoutScreenKey)
         //Get Storyboard
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
@@ -97,7 +108,9 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.timelineViewController.tweetType = Tweet.TweetType.homeTimeline
         
         //Setup profile View Controller
-        self.profileViewController = storyboard.instantiateViewController(withIdentifier: self.profileNavCtrlIdentifier)
+        self.profileNavCtrl = storyboard.instantiateViewController(withIdentifier: self.profileNavCtrlIdentifier) as! UINavigationController
+        self.profileViewController = profileNavCtrl.topViewController as! ProfileViewController
+        self.profileViewController.didRequestAuthenticatedUserProfile = true;
         
         //Setup mentions View Controller
         self.mentionsNavCtrl = storyboard.instantiateViewController(withIdentifier: self.tweetsNavCtrlIdentifier) as! UINavigationController
@@ -110,7 +123,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 menuDict[self.timelineScreenKey] = self.timelineNavCtrl
                 break
             case self.profileScreenKey:
-                menuDict[self.profileScreenKey] = self.profileViewController
+                menuDict[self.profileScreenKey] = self.profileNavCtrl
                 break
             case self.mentionsScreenKey:
                 menuDict[self.mentionsScreenKey] = self.mentionsNavCtrl

@@ -24,6 +24,7 @@ class Tweet: NSObject {
     var userProfilePicUrl: URL?
     var userName: String?
     var userScreenName: String?
+    var userId: String?
     var favorited: Bool?
     var retweeted: Bool?
     var tweetId: String?
@@ -38,6 +39,7 @@ class Tweet: NSObject {
         self.userProfilePicUrlString = self.user?["profile_image_url_https"] as? String
         self.userName = self.user?["name"] as? String
         self.userScreenName = self.user?["screen_name"] as? String
+        self.userId = self.user?["id_str"] as? String
         self.favorited = dict["favorited"] as? Bool
         self.retweeted = dict["retweeted"] as? Bool
         self.tweetId = dict["id_str"] as? String
@@ -72,6 +74,7 @@ class Tweet: NSObject {
     enum TweetType: String {
         case homeTimeline = "homeTimeline"
         case mentions = "mentions"
+        case userTimeline = "userTimeline"
     }
     
     class func tweets(withArray dicts: [Dictionary<String,Any>])->[Tweet]{
